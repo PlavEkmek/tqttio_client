@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tqttio_client/screens/dashboardAdd_screen.dart';
 import 'package:tqttio_client/state_widget.dart';
 
+// ignore: must_be_immutable
 class DashboardsPage extends StatefulWidget {
   List<String> dashboards;
   DashboardsPage({Key key, this.dashboards}) : super(key: key);
@@ -23,22 +25,43 @@ class _DashboardsPageState extends State<DashboardsPage> {
 
   @override
   Widget build(BuildContext context) {
-    dashboards = StateInheritedWidget.of(context).state.dashboards;
+    var corestate= StateInheritedWidget.of(context);
+    dashboards = corestate.state.dashboards;
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: dashboardCount,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(dashboards[index]),
-                  );
-                }),
-          )
-        ],
-      ),
-    );
+        appBar: AppBar(),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  itemCount: dashboardCount,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(dashboards[index]),
+                      onTap: (){
+                        foo();
+                      },
+                    );
+                  }),
+            )
+          ],
+        ),
+        floatingActionButton: dashboardAddButton());
+  }
+
+  FloatingActionButton dashboardAddButton() {
+    return FloatingActionButton(
+      tooltip: "Otomasyon Ekle",
+      child: Icon(Icons.add,),
+      onPressed: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => DashboardAdd())).then((value) => { 
+            
+            foo()
+            });
+     
+    });
+  }
+  void foo(){
+    print("Hi!");
   }
 }
