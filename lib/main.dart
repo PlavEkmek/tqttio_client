@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tqttio_client/screens/dashboards_screen.dart';
-import 'package:tqttio_client/state_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:tqttio_client/controller/dashboard_notifier.dart';
+import 'package:tqttio_client/screen/dashboardsList_screen.dart';
 
 void main() {
-  runApp(MyApp());
-  }
-  
-  class MyApp extends StatelessWidget{
+  runApp(ChangeNotifierProvider(
+    create: (context) => DashboardNotifier(),
+    child: App(),
+  ));
+}
+
+class App extends StatelessWidget {
+  const App({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    
-    return StateWidget(
-          child: MaterialApp(
-        home: DashboardsPage(),
-      ),
-    ); 
+    return MaterialApp(home: DashboardsListScreen());
   }
 }
