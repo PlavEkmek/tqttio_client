@@ -4,8 +4,12 @@ import 'package:tqttio_client/controller/dashboard_notifier.dart';
 import 'package:tqttio_client/screen/dashboardsList_screen.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => DashboardNotifier(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => DashboardNotifier(),
+      ),
+    ],
     child: App(),
   ));
 }
@@ -15,6 +19,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: DashboardsListScreen());
+    return MaterialApp(
+        home: DashboardsListScreen(), debugShowCheckedModeBanner: false);
   }
 }
