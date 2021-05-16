@@ -59,7 +59,7 @@ class _DashboardsListScreenState extends State<DashboardsListScreen> {
           padding: EdgeInsets.only(right: 10.0),
           child: Row(
             children: [
-              Flexible(child: buildDashboardListTile(dashboards[index])),
+              Flexible(child: buildDashboardListTile(dashboards[index],notifier)),
               Flexible(
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -78,11 +78,12 @@ class _DashboardsListScreenState extends State<DashboardsListScreen> {
     );
   }
 
-  ListTile buildDashboardListTile(Dashboard dash) {
+  ListTile buildDashboardListTile(Dashboard dash,DashboardNotifier notifier) {
     return ListTile(
       title: Text(dash.dashboardName),
       subtitle: Text("Bağlanmak için tıklayın."),
       onTap: () {
+        notifier.selectedDashboard = dash;
         Navigator.push(context, MaterialPageRoute(builder: (builder)=>DashboardScreen(dashboard:dash)));
       },
     );
