@@ -104,6 +104,8 @@ class _DashboardIndicatorAddState extends State<DashboardIndicatorAdd> with Tool
     if (formKey.currentState.validate()) formKey.currentState.save();
     this.tool.type= "Indicator";
     notifier.addTool(this.tool);
+    print(this.tool.topicName);
+    notifier.selectedClient.mqttSubscribe(this.tool.topicName);
     Navigator.pop(context);
   }
 }
