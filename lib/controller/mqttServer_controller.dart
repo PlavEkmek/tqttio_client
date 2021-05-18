@@ -1,9 +1,15 @@
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:provider/provider.dart';
+import 'package:tqttio_client/controller/dashboard_notifier.dart';
 
-class MqttServerControlleronMixin {
-
-  Future<MqttServerClient> initializeClient(MqttServerClient client) async {
+class MqttServerController {
+  MqttServerClient client;
+  MqttServerController(this.client) {
+    initializeClient();
+    mqttConnect();
+  }
+  Future<MqttServerClient> initializeClient() async {
     /// Set logging on if needed, defaults to off
     client.logging(on: false);
 
@@ -16,7 +22,7 @@ class MqttServerControlleronMixin {
     client.setProtocolV311();
 
     /// Add the unsolicited disconnection callback
-    client.onDisconnected = () => onDisconnected(client);
+    client.onDisconnected = () => onDisconnected();
 
     /// Add the successful connection callback
     client.onConnected = onConnected;
@@ -33,22 +39,19 @@ class MqttServerControlleronMixin {
     client.pongCallback = pong;
   }
 
-  void mqttSubscribe(MqttServerClient client, String topic) {
-    String topicName = topic;
+ void mqttSubscribe(String topicName)  {
+   print("Abone olundu."+' '+topicName);
     client.subscribe(topicName, MqttQos.atMostOnce);
-
-     client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final recMess = c[0].payload as MqttPublishMessage;
-      final pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-      print(
-          ' <${c[0].topic}>, payload is <-- $pt -->');
-      print('');
-    });
   }
 
-  Future<void> mqttConnect(MqttServerClient client) async {
+  void mqttPublish(String pubTopic, String message) {
+    final builder = MqttClientPayloadBuilder();
+    builder.addString(message);
+    client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload);
+    print("Topicname:"+pubTopic+" Message:"+message+" Send to broker");
+  }
+
+  Future<void> mqttConnect() async {
     /// Create a connection message to use or use the default one. The default one sets the
     /// client identifier, any supplied username/password and clean session,
     /// an example of a specific one below.
@@ -86,7 +89,7 @@ class MqttServerControlleronMixin {
   }
 
   /// The unsolicited disconnect callback
-  void onDisconnected(MqttServerClient client) {
+  void onDisconnected() {
     print('EXAMPLE::OnDisconnected client callback - Client disconnection');
     if (client.connectionStatus.disconnectionOrigin ==
         MqttDisconnectionOrigin.solicited) {
