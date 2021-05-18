@@ -5,7 +5,7 @@ class Tool {
   String _topicName = ""; 
   String type; 
   bool value =false;
-  String text = "Patates Plavi guzel mi olur Patates Plavi guzel mi olur";
+  String text = "";
   get toolName => _toolName;
 
   get topicName => _topicName;
