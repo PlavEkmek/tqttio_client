@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tqttio_client/controller/dashboard_notifier.dart';
 import 'package:tqttio_client/model/tool.dart';
 
 class SwitchToolWidget extends StatefulWidget {
@@ -18,7 +20,7 @@ class _SwitchToolWidgetState extends State<SwitchToolWidget> {
     return Container(
       margin: EdgeInsets.all(MediaQuery.of(context).size.width % 45),
       decoration: BoxDecoration(
-          color: tool.value?Colors.greenAccent:Colors.blue[100],
+          color: tool.value ? Colors.greenAccent : Colors.blue[100],
           border: Border.all(color: Colors.black54),
           borderRadius: BorderRadius.circular(3)),
       child: Center(
@@ -30,20 +32,27 @@ class _SwitchToolWidgetState extends State<SwitchToolWidget> {
                 child: Center(
                   child: Transform.scale(
                     scale: 1.5,
-                    child: Switch(
-                      value: tool.value,
-                      onChanged: (val) {
-                        setState(() {
-                          tool.value = val;
-                        });
-                      },
+                    child: Consumer<DashboardNotifier>(
+                      builder: (context, notifier, _) => Switch(
+                        value: tool.value,
+                        onChanged: (val) {
+                          if (val) notifier.selectedClient.mqttPublish(tool.topicName, "1");
+                          else notifier.selectedClient.mqttPublish(tool.topicName, "0");
+                            setState(() {
+                              tool.value = val;
+                            });
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
             Container(
-              child: Text(tool.toolName,style: TextStyle(fontSize: 16),),
+              child: Text(
+                tool.toolName,
+                style: TextStyle(fontSize: 16),
+              ),
             )
           ],
         ),
