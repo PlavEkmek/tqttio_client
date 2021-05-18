@@ -25,43 +25,35 @@ enum dashboardToolList {
 
 enum toolMode { add, edit }
 enum toolTypes {switchbutton,indicator}
-class _DashboardScreenState extends State<DashboardScreen>
-    with MqttServerControlleronMixin {
-  void fun() async {
-    client = MqttServerClient('192.168.0.103', '');
-    await initializeClient(client);
-    await mqttConnect(client);
-  }
+class _DashboardScreenState extends State<DashboardScreen>{
 
-  _DashboardScreenState() {
-    fun();
-  }
-  MqttServerClient client;
   String connectStatus = "Bağlandı.";
   bool isGridView = true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(widget.dashboard.dashboardName), actions: [
-          PopupMenuButton(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  ),
-                margin:EdgeInsets.only(top:13,bottom:13,right:10), child: Icon(Icons.add)),
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<dashboardToolList>>[
-                    buildSwitchPopupButton(),
-                    buildIndicatorPopupButton()
-                  ])
-        ]),
-        body: Container(
-          decoration: BoxDecoration(color: Colors.grey[900]),
-          child: Column(
-            children: [buildConnectionStatusBar(), buildDashboardTools(context)],
-          ),
-        ));
+    return Consumer<DashboardNotifier>(builder: (_,notifier,__)=>
+          Scaffold(
+          appBar: AppBar(title: Text(widget.dashboard.dashboardName), actions: [
+            PopupMenuButton(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    ),
+                  margin:EdgeInsets.only(top:13,bottom:13,right:10), child: Icon(Icons.add)),
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuEntry<dashboardToolList>>[
+                      buildSwitchPopupButton(),
+                      buildIndicatorPopupButton()
+                    ])
+          ]),
+          body: Container(
+            decoration: BoxDecoration(color: Colors.grey[900]),
+            child: Column(
+              children: [buildConnectionStatusBar(), buildDashboardTools(context)],
+            ),
+          )),
+    );
   }
 
   Container buildConnectionStatusBar() {
